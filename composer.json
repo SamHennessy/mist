@@ -1,0 +1,16 @@
+{
+    "require": {
+        "php": ">=5.5.0",
+        "psr/log": "~1"
+    },
+    "autoload": {
+        "psr-0": {"Mist\\": "src/"}
+    },
+    "require-dev": {
+        "monolog/monolog": "~1",
+        "zendframework/zend-log": "~2",
+        "analog/analog": "~1",
+        "zendframework/zend-cache": "~2",
+        "mikey179/vfsStream": "~1"
+    }
+}
