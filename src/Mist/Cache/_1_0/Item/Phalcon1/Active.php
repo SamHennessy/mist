@@ -1,10 +1,10 @@
 <?php
 
-namespace Mist\Cache\_1_0\Item;
+namespace Mist\Cache\_1_0\Item\Phalcon1;
 
-class Phalcon1 implements \Mist\Cache\_1_0\Item
+class Active implements \Mist\Cache\_1_0\Item
 {
-    use Store;
+    use \Mist\Cache\_1_0\Item\Store;
 
     protected $error;
 
@@ -14,6 +14,8 @@ class Phalcon1 implements \Mist\Cache\_1_0\Item
         $success = true;
         if ($value === null) {
             $success = false;
+        } else {
+            $value = unserialize($value);
         }
         return $value;
     }
@@ -22,7 +24,7 @@ class Phalcon1 implements \Mist\Cache\_1_0\Item
     {
         $this->error = false;
         try {
-            $this->store->save($key, $value, (int)$ttl);
+            $this->store->save($key, serialize($value), (int)$ttl);
         } catch (\Phalcon\Cache\Exception $exception) {
             $this->error = $exception;
             return false;

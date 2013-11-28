@@ -1,3 +1,4 @@
 composer.lock
 vendor/*
 docs/outline.txt
+*.DS_Store

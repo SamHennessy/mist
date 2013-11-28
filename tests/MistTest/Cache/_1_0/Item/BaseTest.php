@@ -168,7 +168,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
     public function testIsHitSetHit()
     {
         extract($this->createRandKeyAndValue());
-        $item  = $this->createItem($key);
+        $item = $this->createItem($key);
         $item->set($value);
 
         $this->assertTrue($item->isHit());
@@ -191,8 +191,8 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
         $item = $this->createItem($key);
 
-        $this->assertFalse($item->isHit());
         $this->assertNull($item->get());
+        $this->assertFalse($item->isHit());
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mist\Cache\_1_0\Item\Memcached1;
+namespace Mist\Cache\_1_0\Item;
 
 class Passive implements \Mist\Cache\_1_0\Item
 {
@@ -16,8 +16,7 @@ class Passive implements \Mist\Cache\_1_0\Item
 
     public function __construct(\Mist\Cache\_1_0\Pool $pool, $key, $value, $isHit)
     {
-        if ($this->assertCacheKeyBase($key) === false)
-        {
+        if ($this->assertCacheKeyBase($key) === false) {
             throw new \Mist\Cache\_1_0\Item\InvalidArgumentException(
                 'Passed key not valid',
                 \Mist\Cache\_1_0\Item\Exception::CACHE_1_0_INVALID_KEY

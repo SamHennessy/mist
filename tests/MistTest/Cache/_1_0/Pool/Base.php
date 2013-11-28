@@ -1,23 +1,12 @@
 <?php
 
-
 namespace MistTest\Cache\_1_0\Pool;
 
-class Memcached1Test extends \PHPUnit_Framework_TestCase
+trait Base
 {
     use \Mist\Cache\_1_0\Item\Validation;
 
-    protected $memcached;
-
-    protected $pool;
-
     protected $usedKeyList = array();
-
-    protected function setUp()
-    {
-        $this->memcached = new \Memcached();
-        $this->memcached->addServer('localhost', 11211);
-    }
 
     /**
      * Tears down the fixture, for example, close a network connection.
@@ -30,22 +19,11 @@ class Memcached1Test extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function internalSet($key, $value)
-    {
-        $this->memcached->set($key, $value, 5);
-    }
+    abstract protected function createPool();
 
-    protected function internalDelete($key)
-    {
-        if (@$this->assertCacheKeyBase($key)) {
-            $this->memcached->delete($key);
-        }
-    }
+    abstract protected function internalSet($key, $value);
 
-    protected function createPool()
-    {
-        return new \Mist\Cache\_1_0\Pool\Memcached1($this->memcached);
-    }
+    abstract protected function internalDelete($key);
 
     protected function rand()
     {
@@ -60,9 +38,6 @@ class Memcached1Test extends \PHPUnit_Framework_TestCase
         $pool = $this->createPool();
 
         $this->assertInstanceOf(\Mist\Cache\_1_0\Pool::class, $pool);
-        $this->assertInstanceOf(
-            \Mist\Cache\_1_0\Pool\Memcached1::class, $pool
-        );
     }
 
     public function testGetItemMiss()
@@ -332,7 +307,7 @@ class Memcached1Test extends \PHPUnit_Framework_TestCase
         $this->assertSame(array_shift($keyList2), $result2->key());
     }
 
-    public function testGetItemsSecondCallFail()
+    public function testGetItemsSecondCallGetData()
     {
         $pool = $this->createPool();
 
@@ -370,13 +345,13 @@ class Memcached1Test extends \PHPUnit_Framework_TestCase
         $this->assertSame(array_shift($keyList2), $result2->key());
 
         $result1->next();
-        $this->assertTrue(array_shift($keyList1) != $result1->key());
+        $this->assertTrue(array_shift($keyList1) === $result1->key());
 
         $result2->next();
-        $this->assertNull($result2->key());
+        $this->assertTrue(array_shift($keyList2) === $result2->key());
     }
 
-    public function testClearResturn()
+    public function testClearReturn()
     {
         $pool = $this->createPool();
 

@@ -4,13 +4,13 @@ namespace MistTest\Log\_1_0;
 
 class Phalcon1Test extends \MistTest\Log\PsrLoggerInterfaceTest
 {
-	protected $logger;
+    protected $logger;
 
     protected $stream;
 
 
-	protected function setUp()
-	{
+    protected function setUp()
+    {
         if (class_exists(\Phalcon\Logger::class) === false) {
             $this->markTestSkipped('Phalcon 1 not available');
         }
@@ -31,7 +31,7 @@ class Phalcon1Test extends \MistTest\Log\PsrLoggerInterfaceTest
                 return $logger;
             }
         );
-	}
+    }
 
 
     /**
@@ -39,22 +39,22 @@ class Phalcon1Test extends \MistTest\Log\PsrLoggerInterfaceTest
      */
     public function getLogger()
     {
-    	return $this->logger;
+        return $this->logger;
     }
 
-	/**
-	 * 
-	 */
-	public function testCreate()
-	{
-		$logger = $this->getLogger();
+    /**
+     * 
+     */
+    public function testCreate()
+    {
+        $logger = $this->getLogger();
 
-		$this->assertInstanceOf(\Mist\Log\_1_0\Phalcon1::class, $logger);
-		$this->assertInstanceOf(\Phalcon\Logger\AdapterInterface::class, $logger->getLogger());
+        $this->assertInstanceOf(\Mist\Log\_1_0\Phalcon1::class, $logger);
+        $this->assertInstanceOf(\Phalcon\Logger\AdapterInterface::class, $logger->getLogger());
 
         $this->assertInstanceOf(\Mist\Log\_1_0\Logger::class, $logger);
         $this->assertInstanceOf(\Psr\Log\LoggerInterface::class, $logger);
-	}
+    }
 
     /**
      * This must return the log messages in order with a simple formatting: "<LOG LEVEL> <MESSAGE>"
@@ -78,12 +78,12 @@ class Phalcon1Test extends \MistTest\Log\PsrLoggerInterfaceTest
 
         $fp      = fopen("var://".__CLASS__, 'r');
         $logList = array();
-    	while ($line = fgets($fp)) {
+        while ($line = fgets($fp)) {
             $partList = explode(' ', substr($line, 0, -1), 2);
-    		$logList[] = strtolower($partList[0])." $partList[1]";
-    	}
+            $logList[] = strtolower($partList[0])." $partList[1]";
+        }
 
-    	return $logList;
+        return $logList;
     }
 
 }

@@ -18,8 +18,7 @@ trait Store
 
     public function __construct($store, $key)
     {
-        if ($this->assertCacheKeyBase($key) === false)
-        {
+        if ($this->assertCacheKeyBase($key) === false) {
             throw new InvalidArgumentException(
                 'Passed key not valid',
                 Exception::CACHE_1_0_INVALID_KEY

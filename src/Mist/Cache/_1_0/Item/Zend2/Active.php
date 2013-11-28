@@ -1,10 +1,10 @@
 <?php
 
-namespace Mist\Cache\_1_0\Item;
+namespace Mist\Cache\_1_0\Item\Zend2;
 
-class Zend2 implements \Mist\Cache\_1_0\Item
+class Active implements \Mist\Cache\_1_0\Item
 {
-    use Store;
+    use \Mist\Cache\_1_0\Item\Store;
 
     protected function internalGet($key, &$success)
     {
@@ -20,9 +20,9 @@ class Zend2 implements \Mist\Cache\_1_0\Item
     {
         // TTL in Zend is global
         if ($ttl !== null) {
-            throw new Exception(
+            throw new \Mist\Cache\_1_0\Item\Exception(
                 'TTL not supported by this adapter',
-                Exception::CACHE_1_0_ZEND_TTL_1
+                \Mist\Cache\_1_0\Item\Exception::CACHE_1_0_ZEND_TTL_1
             );
         }
 

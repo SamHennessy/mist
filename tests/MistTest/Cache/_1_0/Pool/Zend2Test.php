@@ -4,76 +4,33 @@ namespace MistTest\Cache\_1_0\Pool;
 
 class Zend2Test extends \PHPUnit_Framework_TestCase
 {
-    protected $memoryCache;
+    use Base;
 
-    protected function getPool($setBuilderPool = true)
+    protected $store;
+
+    protected $pool;
+
+    protected function setUp()
     {
-        $pool = new \Mist\Cache\_1_0\Pool\Zend2();
-
-        $this->memoryCache = \Zend\Cache\StorageFactory::factory(
-            array(
-                'adapter' => array(
-                    'name' => 'memory'
-                ),
-            )
+        $this->store = \Zend\Cache\StorageFactory::factory(
+            array('adapter' => array('name' => 'Memory'))
         );
+    }
 
-        if ($setBuilderPool) {
-            $pool->setBuilderPool(function() {
-                return $this->memoryCache;
-            });
+    protected function createPool()
+    {
+        return new \Mist\Cache\_1_0\Pool\Zend2($this->store);
+    }
+
+    protected function internalSet($key, $value)
+    {
+        $this->store->setItem($key, serialize($value));
+    }
+
+    protected function internalDelete($key)
+    {
+        if (@$this->assertCacheKeyBase($key)) {
+            $this->store->removeItem($key);
         }
-
-        return $pool;
     }
-
-    /**
-     * 
-     */
-    public function testCreate()
-    {
-        $pool = $this->getPool();
-
-        $this->assertInstanceOf(\Mist\Cache\_1_0\Pool::class, $pool);
-        $this->assertInstanceOf(\Mist\Cache\_1_0\Pool\Zend2::class, $pool);
-    }
-
-    public function testNoBuilderError()
-    {
-        $this->setExpectedException(
-            \Mist\Cache\_1_0\Pool\Exception::class,
-            '',
-            \Mist\Exception::CACHE_1_0_POOL_BUILDING_2
-        );
-
-        $pool = $this->getPool(false);
-
-        $pool->getItem(time());
-    }
-
-    public function testInvalidBuilderError()
-    {
-        $this->setExpectedException(
-            \Mist\Cache\_1_0\Pool\Exception::class,
-            '',
-            \Mist\Exception::CACHE_1_0_POOL_BUILDING_1
-        );
-
-        $pool = $this->getPool(false);
-
-        $pool->setBuilderPool(function(){});
-
-        $pool->getItem(time());
-    }
-
-    public function testGetPool()
-    {
-        $this->assertInstanceOf(
-            \Zend\Cache\Storage\Adapter\Memory::class,
-            $this->getPool()->getPool()
-        );
-    }
-
-
-
 }

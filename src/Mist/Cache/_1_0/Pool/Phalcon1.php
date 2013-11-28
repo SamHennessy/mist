@@ -2,7 +2,7 @@
 
 namespace Mist\Cache\_1_0\Pool;
 
-class Zend2 implements \Mist\Cache\_1_0\Pool
+class Phalcon1 implements \Mist\Cache\_1_0\Pool
 {
     protected $store;
 
@@ -26,20 +26,19 @@ class Zend2 implements \Mist\Cache\_1_0\Pool
      */
     public function getItem($key)
     {
-        return new \Mist\Cache\_1_0\Item\Zend2\Active($this->store, $key);
+        return new \Mist\Cache\_1_0\Item\Phalcon1\Active($this->store, $key);
     }
 
     /**
      * Deletes all items in the pool.
+     *
+     * Not supported by Phalcon
      *
      * @return \Psr\Cache\PoolInterface
      *   The current pool.
      */
     public function clear()
     {
-        if ($this->store instanceof \Zend\Cache\Storage\FlushableInterface) {
-            $this->store->flush();
-        }
         return $this;
     }
 
@@ -55,15 +54,18 @@ class Zend2 implements \Mist\Cache\_1_0\Pool
      */
     public function getItems(array $keys)
     {
-        foreach ($this->store->getItems($keys) as $key => $value)
+        do
         {
-            yield $key => new \Mist\Cache\_1_0\Item\Passive(
-                $this,
-                $key,
-                unserialize($value),
-                true
-            );
-        }
-
+            $key   = current($keys);
+            $value = $this->store->get($key);
+            if ($value !== null) {
+                yield $key => new \Mist\Cache\_1_0\Item\Passive(
+                    $this,
+                    $key,
+                    unserialize($value),
+                    true
+                );
+            }
+        } while (next($keys));
     }
 }

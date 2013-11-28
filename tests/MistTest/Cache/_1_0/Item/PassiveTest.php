@@ -1,16 +1,16 @@
 <?php
 
-namespace MistTest\Cache\_1_0\Item\Memcached1;
+namespace MistTest\Cache\_1_0\Item;
 
 /**
  * This is a very dependent on the Pool and the active item working. If it
  * breaks it most likely is something else.
  */
-class PassiveTest extends \MistTest\Cache\_1_0\Item\BaseTest
+class PassiveTest extends BaseTest
 {
     use \Mist\Cache\_1_0\Item\Validation;
 
-	protected $memcached;
+    protected $memcached;
 
     protected function internalSet($key, $value)
     {
@@ -35,8 +35,8 @@ class PassiveTest extends \MistTest\Cache\_1_0\Item\BaseTest
         }
     }
 
-	protected function setUp()
-	{
+    protected function setUp()
+    {
         if (class_exists(\Memcached::class) === false) {
             $this->markTestSkipped('Memcached not available');
         }
@@ -44,26 +44,26 @@ class PassiveTest extends \MistTest\Cache\_1_0\Item\BaseTest
         $this->memcached = new \Memcached();
         $this->memcached->addServer('localhost', 11211);
 
-        $this->store = new \Mist\Cache\_1_0\Pool\Memcached1($this->memcached);
+        $this->store = new \Mist\Cache\_1_0\Pool\Memcached1\Cheap($this->memcached);
 
         $this->storeMock = $this
-			->getMockBuilder(\Mist\Cache\_1_0\Pool\Memcached1::class)
-			->disableOriginalConstructor()
-			->getMock();
+            ->getMockBuilder(\Mist\Cache\_1_0\Pool\Memcached1\Cheap::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     protected function createItem($key, $value = null, $isHit = false)
     {
-        return new \Mist\Cache\_1_0\Item\Memcached1\Passive(
-        	$this->store, $key, $value, $isHit
+        return new \Mist\Cache\_1_0\Item\Passive(
+            $this->store, $key, $value, $isHit
         );
     }
 
     protected function createItemMockStore($key, $value = null, $isHit = false)
     {
-    	return new \Mist\Cache\_1_0\Item\Memcached1\Passive(
-    		$this->storeMock, $key, $value, $isHit
-    	);
+        return new \Mist\Cache\_1_0\Item\Passive(
+            $this->storeMock, $key, $value, $isHit
+        );
     }
 
     /**
@@ -78,13 +78,13 @@ class PassiveTest extends \MistTest\Cache\_1_0\Item\BaseTest
      */
     protected function setTtlExpectation($key, $value, $ttlSeconds, $ttlRaw)
     {
-    	$mockItem = $this
-    		->getMockBuilder(\Mist\Cache\_1_0\Item\Memcached1\Active::class)
-    		->disableOriginalConstructor()
-    		->getMock();
-		$mockItem->expects($this->once())
-			->method('set')
-    		->with($this->anything(), $this->equalTo($ttlRaw));
+        $mockItem = $this
+            ->getMockBuilder(\Mist\Cache\_1_0\Item\Memcached1\Active::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockItem->expects($this->once())
+            ->method('set')
+            ->with($this->anything(), $this->equalTo($ttlRaw));
 
         $this->storeMock
             ->expects($this->once())

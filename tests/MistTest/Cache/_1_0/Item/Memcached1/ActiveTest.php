@@ -6,7 +6,7 @@ class ActiveTest extends \MistTest\Cache\_1_0\Item\ActiveTest
 {
     use \Mist\Cache\_1_0\Item\Validation;
 
-	protected $store;
+    protected $store;
 
     protected function internalSet($key, $value)
     {
@@ -31,8 +31,8 @@ class ActiveTest extends \MistTest\Cache\_1_0\Item\ActiveTest
         }
     }
 
-	protected function setUp()
-	{
+    protected function setUp()
+    {
         if (class_exists(\Memcached::class) === false) {
             $this->markTestSkipped('Memcached not available');
         }
@@ -50,24 +50,7 @@ class ActiveTest extends \MistTest\Cache\_1_0\Item\ActiveTest
 
     protected function createItemMockStore($key)
     {
-    	return new \Mist\Cache\_1_0\Item\Memcached1\Active($this->storeMock, $key);
-    }
-
-    /**
-     * 
-     */
-    public function testCreate()
-    {
-        extract($this->createRandKeyAndValue());
-        $item = $this->createItem($key);
-
-        $this->assertInstanceOf(\Mist\Cache\_1_0\Item::class, $item);
-        $this->assertInstanceOf(
-        	\Mist\Cache\_1_0\Item\Memcached1::class, $item
-        );
-        $this->assertInstanceOf(
-        	\Mist\Cache\_1_0\Item\Memcached1\Active::class, $item
-        );
+        return new \Mist\Cache\_1_0\Item\Memcached1\Active($this->storeMock, $key);
     }
 
     /**

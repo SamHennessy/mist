@@ -36,18 +36,15 @@ abstract class ActiveTest extends BaseTest
     protected abstract function setTtlExpectation($key, $value, $ttlSeconds, $ttlRaw);
 
     /**
-     * 
+     *
      */
-    public abstract function testCreate();
-    /*
+    public function testCreate()
     {
         extract($this->createRandKeyAndValue());
         $item = $this->createItem($key);
 
         $this->assertInstanceOf(\Mist\Cache\_1_0\Item::class, $item);
-        $this->assertInstanceOf(\Mist\Cache\_1_0\Item\Phalcon1::class, $item);
     }
-    */
 
     public function testSetReturnOnSuccess()
     {
@@ -234,5 +231,19 @@ abstract class ActiveTest extends BaseTest
 
         $this->assertSame($value, $item->get());
         $this->assertTrue($item->isHit());
+    }
+
+    /**
+     * This will catch clients that can't check for success on gets
+     */
+    public function testIsHitSetNull3()
+    {
+        extract($this->createRandKeyAndValue());
+        $this->internalSet($key, null);
+        $item = $this->createItem($key);
+
+        $this->assertTrue($item->isHit());
+        $this->assertNull($item->get());
+        $this->assertNull($this->internalGet($key));
     }
 }
